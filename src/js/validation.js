@@ -6,6 +6,9 @@ const REQUIRED = "REQUIRED";
 const TEXT = "TEXT";
 const CPF = "CPF";
 const CEP = "CEP";
+const PHONE = "PHONE";
+const CNPJ = "CNPJ";
+const CNPJ_CPF = "CNPJ/CPF";
 const EXP_EMAIL = /^[a-zA-Z0-9_&!%?#$-.]+@[a-zA-Z0-9_-]+\.[a-z]{2,5}/;
 const EXP_TEXT = /[a-zA-Z]/;
 const EXP_CEP = /^[0-9]{5}-[0-9]{3}$/;
@@ -32,10 +35,9 @@ function checkForm() {
             consoleLog('o que checar: '+whatsCheck);
             for (var x=0;x<whatsCheck.length;x++){
                 let checkReturn =  checkElement(elementos[i],whatsCheck[x]);
-                if (checkReturn.length>0){
-                    console.log('checkReturn: '+checkReturn);
-                    msgError += (msgError.length>0 ? "\n" : "") + checkReturn;            
-                }  
+                console.log('checkReturn '+whatsCheck[x]+': '+checkReturn);
+                (checkReturn.length>0 ? msgError += "\n"+checkReturn : "");
+                //msgError += (checkReturn.length>0 ? "\n" : "") + checkReturn;
             } 
         } 
     }
@@ -47,43 +49,26 @@ function checkForm() {
 }
 
 function checkElement(element, whatsCheck){
-    let msgError = "";
     switch (whatsCheck){
         case REQUIRED:
             return checkRequired(element);
-            //break;
         case NUMBER:
             return checkNumber(element);
-            //break;
         case EMAIL:
             return checkEmail(element);
+        case PHONE:
+            return checkPhone(element);
         case CPF:
-            if (element.value !== ""){ 
-                if(!valida_cpf(element.value)){
-                    ok = false;
-                    msgError =  "Preencha seu CPF corretamente.";
-                }
-            }
-            break;
+            return checkCPF(element);
+        case CNPJ:
+            return checkCNPJ(element);
+        case CNPJ_CPF:
+            return checkCNPJCPF(element);
         case CEP: 
-            if (element.value !== ""){
-                if (!EXP_CEP.test(element.value)){
-                    ok = false;
-                    msgError =  "Preencha o CEP corretamente.";
-                }
-            }   
-            break;
+            return checkCEP(element);
         case TEXT:   
-            if (element.value !== ""){
-                if (!EXP_TEXT.test(element.value)){
-                    ok = false;
-                    msgError =  "Preencha somente letras no campo "+element.name+".";
-                    
-                }
-            }  
-            break;     
+            return checkText(element);
     }
-    return msgError;
 }
 
 function checkRequired(element){
@@ -93,18 +78,53 @@ function checkRequired(element){
 
 function checkNumber(element){        
         //console.log(!EXP_NUMBER.test(element.value));
-        return (element.value !== "" && !EXP_NUMBER.test(element.value) ? "Preencha um valor numérico para o campo "+element.name+ "." : "");            
+        return (element.value !== "" && !EXP_NUMBER.test(element.value) ? "Preencha um valor numérico para o campo "+element.name+ "." : "");
+}
 
+function checkText(element){
+    return  (element.value !== "" && !EXP_TEXT.test(element.value) ? "Preencha somente com letras o campo "+element.name+"." : ""); 
 }
 
 function checkEmail(element){
     return (element.value !== "" && !EXP_EMAIL.test(element.value) ? "O email "+element.value+ " é invalido." : "");
+}
 
+function checkPhone(element){
+    return (element.value !== "" && element.value.replace(/\W/g,'').length < 10 ? "O telefone"+element.value+" é inválido.": "");
+}
+
+function checkCPF(element){
+    return (element.value !== "" && !validar_cpf(element.value) ? "O CPF "+element.value+" é inválido.": "");
+}
+
+function checkCNPJ(element){
+    return (element.value !== "" && !validar_cnpj(element.value) ? "O CNPJ "+element.value+" é inválido.": "");
+}
+
+function checkCNPJCPF(element){
+    var this_message = "";
+    if(element.value !== ""){
+        if(element.value.replace(/\W/g,'').length > 0 && element.value.replace(/\W/g,'').length<= 11){
+            if(!validar_cpf(element.value)){
+                this_message =  "O CPF "+element.value+" é inválido.";
+            }
+        }else{
+            if(!validar_cnpj(element.value)){
+                this_message =  "O CNPJ "+element.value+" é inválido.";
+            }
+        }
+    }
+
+    return this_message;
+}
+
+function checkCEP(element){
+    return (element.value !== "" && !EXP_CEP.test(element.value) ? "O CEP "+element.value+" é inválido.": "");
 }
 
 // Descrição aqui: https://www.devmedia.com.br/validar-cpf-com-javascript/23916
 
-function valida_cpf(strCPF) {
+function validar_cpf(strCPF) {
     var Soma;
     var Resto;
     var cpf = strCPF.replace(/\W/g,'');
