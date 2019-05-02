@@ -1,0 +1,5 @@
+﻿Existem algumas mudanças que eu tive que fazer para não receber erros com gulp 4.0.0 e por causa do Babel 7.
+Eu tive que instalar @ babel / core e @ babel / preset-env e @ babel / cli para o package.json.
+Eu tive que adicionar "babel": {"presets": ["@ babel / preset-env"]} ao pacote ao invés de "babel": {"presets": ["env"]} sendo adicionado.
+Eu tive que adicionar @ babel / env em vez de env para a declaração .transform (babelify, {presets: ['@ babel / env']}).
+Eu tive que adicionar feito na seção de parâmetros da primeira função sem nome da tarefa js e, em seguida, no final da tarefa done (); para significar o fim do processo assíncrono.
