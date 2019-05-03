@@ -1,22 +1,10 @@
 const DEBUG_MODE = true;
 
-const NUMBER = "NUMBER";
-const EMAIL = "EMAIL";
-const REQUIRED = "REQUIRED";
-const TEXT = "TEXT";
-const CPF = "CPF";
-const CEP = "CEP";
-const PHONE = "PHONE";
-const CNPJ = "CNPJ";
-const SELECT = "SELECT"
-const CNPJ_CPF = "CNPJ/CPF";
 const EXP_EMAIL = /^[a-zA-Z0-9_&!%?#$-.]+@[a-zA-Z0-9_-]+\.[a-z]{2,5}/;
 const EXP_TEXT = /[a-zA-Z]/;
 const EXP_CEP = /^[0-9]{5}-[0-9]{3}$/;
 const EXP_HHMM = /\b(?:[01][0-9]|2[0-3]):[0-5][0-9]\b/;
 const EXP_NUMBER = /^\d+$/;
-var ok;
-
 
 
 function consoleLog(msg){
@@ -24,10 +12,16 @@ function consoleLog(msg){
         console.log(msg);
 }
 
+function removeError(element){
+    console.log($(element).next())
+    if($(element).next()[0].className === "error"){
+        $(element).next().remove();
+    }
+}
+
 function checkForm(classFormName) {
-    ok = true;
+    var accept_validation = true;
     var msgError = "";
-    //var elementos =  document.querySelector("."+classFormName).elements;
     var elementos =  $("."+classFormName+":last")[0].elements;
 
     $(elementos).on('keydown', function(){
@@ -38,12 +32,14 @@ function checkForm(classFormName) {
 
     for (var i = 0; i < elementos.length; i++) {
         if(elementos[i].getAttribute("checkError") === "true"){
-            consoleLog('elemento nome: '+elementos[i].name);
-            consoleLog('elemento valor: '+elementos[i].value);
+            console.log(elementos[i].type)
+            if(elementos[i].type === 'select-one'){
+                var select_index = i;
+                $(elementos[i]).on('change', function(){ removeError(elementos[select_index]) });
+            }
             let whatsCheck = elementos[i].getAttribute("whatsCheck").split(",");
-            consoleLog('o que checar: '+whatsCheck);
             for (var x=0;x<whatsCheck.length;x++){
-                let checkReturn =  checkElement(elementos[i],whatsCheck[x],classFormName);
+                let checkReturn =  checkElement(elementos[i],whatsCheck[x].trim().toUpperCase(),classFormName);
                 consoleLog('checkReturn '+whatsCheck[x]+': '+checkReturn);
                 if(checkReturn.length>0){
                     msgError += "\n"+checkReturn
@@ -51,59 +47,52 @@ function checkForm(classFormName) {
                         $(elementos[i]).after('<span class="error"><small style="color: #ff0000">*'+checkReturn+'</small></span>');
                     }
                 }
-                //(checkReturn.length>0 ? msgError += "\n"+checkReturn : "");
-                //msgError += (checkReturn.length>0 ? "\n" : "") + checkReturn;
             } 
         } 
     }
     if (msgError.length>0){
-        ok = false;
+        accept_validation = false;
         //alert(msgError);
     }
-    return ok;
+    return accept_validation;
 }
 
 
 function checkElement(element, whatsCheck, classFormName){
     switch (whatsCheck){
-        case REQUIRED:
+        case "REQUIRED":
             return checkRequired(element);
-        case NUMBER:
+        case "NUMBER":
             return checkNumber(element);
-        case EMAIL:
+        case "EMAIL":
             return checkEmail(element);
-        case PHONE:
+        case "PHONE":
             return checkPhone(element);
-        case CPF:
+        case "CPF":
             return checkCPF(element);
-        case CNPJ:
+        case "CNPJ":
             return checkCNPJ(element);
-        case CNPJ_CPF:
+        case "CNPJ/CPF":
             return checkCNPJCPF(element);
-        case CEP: 
+        case "CEP": 
             return checkCEP(element);
-        case TEXT:   
+        case "TEXT":   
             return checkText(element);
-        case SELECT:   
-            let name = $(element.options)[0].getAttribute('name');
-            return checkSelect(element, $('option[name="'+name+'"]:checked','.'+classFormName+':last')[0]);
+        case "SELECT":   
+            return checkSelect(element, $('option[name="'+element.options[0].getAttribute('name')+'"]:checked','.'+classFormName+':last')[0]);
     }
 }
 //return  (element.value === "" ? ($(element).after('<label style="color: #ff0000">*</label>'), "Preencha o campo "+element.name+" corretamente.") : ($(element).next().remove(), ""));       
 function checkRequired(element){
-    return  (element.value === "" ? "Preencha o campo "+element.name+" corretamente." : "");       
-    
+    return  (element.value === "" ? "Preencha o campo "+element.name+" corretamente." : "");           
 }
 
 function checkSelect(select, options){
     var this_message = "";
     if(options.value === ""){
         this_message = "Preencha o campo "+select.name+" corretamente.";
-    }else{
-        if($(select).next()[0].className === "error"){
-            $(select).next().remove();
-        }
     }
+
     return  this_message; //(options.value === "" ? "Preencha o campo "+select.name+" corretamente." : "");       
     
 }
@@ -122,7 +111,7 @@ function checkEmail(element){
 }
 
 function checkPhone(element){
-    return (element.value !== "" && element.value.replace(/\W/g,'').length < 10 ? "O telefone"+element.value+" é inválido.": "");
+    return (element.value !== "" && element.value.replace(/\W/g,'').length < 10 ? "O telefone "+element.value+" é inválido.": "");
 }
 
 function checkCPF(element){

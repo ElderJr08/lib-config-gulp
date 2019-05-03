@@ -8,29 +8,24 @@
     <script src="https://supernova.dendron.com.br/js/jquery.min.js"></script>
     <script src="./dist/js/dendron-lib.min.js"></script>
     <title>Dendron Lib</title>
-    <!-- <style>
-        span.error {
-            display: block;
-        }
-    </style> -->
 </head>
 <body>
-    <form class="formulario-dendron">
+    <!-- <form class="formulario-dendron">
             <label for="nome-usuario">Nome: </label>
             <input type="text" id="nome-usuario" name="Nome" checkError="true" whatsCheck="REQUIRED,TEXT" /><br>
             <label>CNPJ/CPF: </label>
             <input type="text" id="documento-usuario" name="CNPJ/CPF" checkError="true" whatsCheck="REQUIRED,CNPJ/CPF" onkeydown="cpf_or_cnpj_mask(this);" /><br>
             <label>CPF: </label>
-            <input type="text" id="cpf-usuario" name="CPF" checkError="true" whatsCheck="REQUIRED,CPF" onkeydown="cpf_or_cnpj_mask(this);" /><br>
+            <input type="text" id="cpf-usuario" name="CPF" checkError="true" whatsCheck="REQUIRED,CPF" onkeydown="cpf_mask(this);" /><br>
             <label>CNPJ: </label>
-            <input type="text" id="cnpj-usuario" name="CNPJ" checkError="true" whatsCheck="REQUIRED,CNPJ" onkeydown="cpf_or_cnpj_mask(this);" /><br>
+            <input type="text" id="cnpj-usuario" name="CNPJ" checkError="true" whatsCheck="REQUIRED,CNPJ" onkeydown="cnpj_mask(this);" /><br>
             <label>E-mail: </label>
             <input type="email" id="email-usuario" name="Email" checkError="true"  whatsCheck="REQUIRED,EMAIL"/><br>
             <label>CEP: </label>
             <input type="text" id="cep-usuario" name="Cep" checkError="true"  whatsCheck="REQUIRED,CEP"/><br>
             <label for="telefone-usuario">Tel: </label>
             <input type="text" id="telefone-usuario" name="Telefone" checkError="true"  whatsCheck="REQUIRED,PHONE" onkeydown="phone_mask(this);" /><br>
-            <select id="select-teste" name="Opções" checkError="true" whatsCheck="SELECT" onchange="">
+            <select id="select-teste" name="Opções" checkError="true" whatsCheck="REQUIRED">
                 <option name="opcao" value="" >Selecione aqui uma opção</option>
                 <option name="opcao" value="1" >Opção1</option>
                 <option name="opcao" value="2" >Opção2</option>
@@ -41,19 +36,15 @@
     </form><br>
     <form class="formulario-dendron2">
             <label for="select-teste">Opções</label>
-            <select id="select-teste" name="Opções" checkError="true" whatsCheck="SELECT" onchange="">
+            <select id="select-teste" name="Opções" checkError="true" whatsCheck="REQUIRED" onchange="">
                 <option name="opcao" value="" >Selecione aqui uma opção</option>
                 <option name="opcao" value="1" >Opção1</option>
                 <option name="opcao" value="2" >Opção2</option>
                 <option name="opcao" value="3" >Opção3</option>
             </select><br>
-            <label>Radio</label>
-            <input type="radio" name="a"  checkError="true" whatsCheck="REQUIRED">
-            <input type="radio" name="a"  checkError="true" whatsCheck="REQUIRED">
-            <input type="radio" name="a"  checkError="true" whatsCheck="REQUIRED">
             <br>
             <input type="button" value="Enviar" onclick="if(checkForm('formulario-dendron2')){alert('enviar para o IA')}"/>
-    </form>
+    </form> -->
     <script>
         bot_id = '153';
         bot_token = '';

@@ -39,6 +39,7 @@ gulp.task('scripts', function() {
         // }))
         .pipe(babel({
             presets: ['@babel/env']
+            //plugins: ['@babel/transform-runtime']
         }))
         .pipe(plumber())
         .pipe(uglify())
